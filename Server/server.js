@@ -6,11 +6,13 @@ const e = require("express");
 const app = express();
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "password",
-    database: "practice",
-});
+    // host: 'ec2-52-33-41-xxx.us-west-2.compute.amazonaws.com',
+     host: 'database-03.cnyk4ek4wokb.us-west-1.rds.amazonaws.com',
+     user: 'SQladmin',
+     password: 'AstR8i76TY<8',
+     //database: 'database-03',
+ });
+ 
 
 con.connect((err) => {
     if (err) throw err;
