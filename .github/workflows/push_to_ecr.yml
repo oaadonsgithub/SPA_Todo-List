@@ -40,20 +40,22 @@
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
         
-        - name: Install SSH Key
-          uses: actions/checkout@v2
+        - name: Deploy ECR image to EC2 QA
           env:
-            PRIVATE_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            HOSTNAME: ${{secrets.EC2_QA_HOST}}
-            USER_NAME: ${{secrets.EC2_QA_USER}}
-
-        - name: Deploy ECR image to EC2
+            PRIVATE_KEY: ${{ secrets.EC2_QA_PRIVATE_KEY }}
+            HOST: ${{ secrets.EC2_QA_HOST }}
+            USER: ${{ secrets.EC2_QA_USER }}
           run: |
-            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-               docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-               docker stop $(docker ps -a -q) || true
-               docker run -d -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-               '
+            echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
+            ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST} '
+            echo "Current directory: $(pwd)"
+            echo "Listing home directory:"
+            ls -la ~
+            
+            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            docker stop $(docker ps -a -q) || true
+            docker run -d -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            '
         
 
       
