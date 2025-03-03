@@ -50,12 +50,7 @@
             IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
           run: |
             echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
-            ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST} '
-            echo "Current directory: $(pwd)"
-            echo "Listing home directory:"
-            ls -la ~
-            
-            
+            ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST} '        
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG   
             docker stop $(docker ps -a -q) || true
             docker run -d -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
