@@ -60,7 +60,6 @@ jobs:
         '
 
     - name: Set up Docker
-       cd ~/SPA_Todo-List/Client
-      run: docker build . --file Dockerfile
+      run: docker build . --file ~/SPA_Todo-List/Client/Dockerfile
 
       
