@@ -52,9 +52,10 @@
             echo "Listing home directory:"
             ls -la ~
             
-            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            
+            docker pull 537124950459.dkr.ecr.us-west-1.amazonaws.com/oaadons:latest    
             docker stop $(docker ps -a -q) || true
-            docker run -d -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            docker run -d -p 80:80 537124950459.dkr.ecr.us-west-1.amazonaws.com/oaadons:latest
             '
         
 
