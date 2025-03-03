@@ -95,7 +95,7 @@ app.post("/signup", (req, res) => {
 
 app.post("/todo", (req, res) => {
     const data = req.body;
-    var a = "onkarabirajdar@gmail.com";
+    var a = "oaaderibigbe@usfca.edu";
     let sql3 = `select * from todos where email='${data.email}'`;
     con.query(sql3, (err, result) => {
         console.log("I am here,", result);
