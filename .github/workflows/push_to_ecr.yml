@@ -38,3 +38,16 @@
           run: |
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+        - name: Install SSH Key
+          uses: webfactory/ssh-agent@v0.5.3
+          with:
+            ssh-private-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+        - name: Deploy ECR image to EC2
+          run: |
+           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_QA_USER }}@${{ secrets.EC2_QA_INSTANCE_IP }} << 'EOF'
+           docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+           docker stop $(docker ps -a -q) || true
+           docker run -d -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+           EOF
